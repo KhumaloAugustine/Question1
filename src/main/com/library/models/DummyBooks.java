@@ -1,5 +1,4 @@
 package main.com.library.models;
-// Import the Book class if it's in a different package
 
 public class DummyBooks {
 
