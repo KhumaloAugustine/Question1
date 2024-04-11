@@ -7,13 +7,13 @@ public class Library {
 
     private final String name;
     private final String address;
-    private final String hours; // Hours of operation (common for all libraries)
-    private final List<Book> books; // Collection of books in the library
+    private final String hours;
+    private final List<Book> books;
 
     public Library(String name, String address) {
         this.name = name;
         this.address = address;
-        this.hours = "9AM to 5PM daily"; // Common hours
+        this.hours = "9AM to 5PM daily";
         this.books = new ArrayList<>();
     }
 
