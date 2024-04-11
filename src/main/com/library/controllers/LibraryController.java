@@ -9,36 +9,49 @@ import java.util.List;
 
 public class LibraryController {
 
-    private final List<Library> libraries; // List of available libraries
+    //  List to store all available libraries in the system
+    private final List<Library> libraries;
+
+    //  Reference to the library view object for user interaction
     private LibraryView view;
 
     public LibraryController() {
         this.libraries = new ArrayList<>();
-        // Add libraries (name, address) to the list
+        //  Add libraries (name, address) to the list during initialization
         libraries.add(new Library("Mountain View Library", "1 Main St."));
         libraries.add(new Library("Forest Creek Library", "5 Elm St."));
-        this.view = new LibraryView(null); // View doesn't depend on a specific library initially
+        //  Create an initial LibraryView object without a specific library assigned yet
+        this.view = new LibraryView(null);
     }
 
+    //  Main program loop that handles user interaction
     public void run() {
         int choice;
-        Library currentLibrary = null; // Stores the currently selected library
+        //  Variable to store the currently selected library
+        Library currentLibrary = null;
 
         do {
+            //  Display welcome message using the view
             view.displayWelcomeMessage();
             System.out.println("\nSelect Library:");
             int i = 1;
             for (Library library : libraries) {
+                //  Print numbered library names
                 System.out.println(i + ". " + library.getName());
                 i++;
             }
             System.out.print("Enter your choice: ");
+            //  Get user input for library selection using the view
             choice = view.getUserChoice();
 
+            //  Validate user choice (within library list range)
             if (choice > 0 && choice <= libraries.size()) {
+                //  Set the currentLibrary based on the user's choice
                 currentLibrary = libraries.get(choice - 1);
-                view = new LibraryView(currentLibrary); // Update view with selected library
-                libraryMenu(currentLibrary); // Handle library-specific actions
+                //  Update the view with the selected library
+                view = new LibraryView(currentLibrary);
+                //  Display library-specific menu and handle actions
+                libraryMenu(currentLibrary);
             } else {
                 System.out.println("Invalid library choice.");
             }
@@ -47,20 +60,25 @@ public class LibraryController {
         System.out.println("\nThank you for using the library system!");
     }
 
+    //  Menu for actions within a specific library
     private void libraryMenu(Library library) {
         int choice;
         do {
+            //  Display welcome message and library name using the view
             view.displayWelcomeMessage();
-            view.displayLibraryMenu(library.getName()); // Display library-specific name
+            view.displayLibraryMenu(library.getName());
             choice = view.getUserChoice();
             switch (choice) {
                 case 1:
+                    //  Display available books using the library object
                     library.printAvailableBooks();
                     break;
                 case 2:
+                    //  Handle borrowing a book
                     borrowBook(library);
                     break;
                 case 3:
+                    //  Handle returning a book
                     returnBook(library);
                     break;
                 case 4:
@@ -71,34 +89,44 @@ public class LibraryController {
         } while (choice != 4);
     }
 
+    //  Process for borrowing a book (find by title and call library method)
     private void borrowBook(Library library) {
         view.displayBorrowBookMenu();
         String title = view.getBookTitleInput();
+        //  Search for the book by title within the library
         Book book = findBookByTitle(library, title);
         if (book != null) {
+            //  Attempt to borrow the book using the library object
             library.borrowBook(book);
         } else {
             System.out.println("Book not found in " + library.getName() + " Library.");
         }
     }
 
+    //  Process for returning a book (find by title and call library method)
     private void returnBook(Library library) {
         view.displayReturnBookMenu();
         String title = view.getBookTitleInput();
+        //  Search for the book by title within the library
         Book book = findBookByTitle(library, title);
         if (book != null) {
+            //  Attempt to return the book using the library object
             library.returnBook(book);
         } else {
             System.out.println("Book not found in " + library.getName() + " Library.");
         }
+
     }
 
+    //  Searches for a book by title within the provided library
     private Book findBookByTitle(Library library, String title) {
+        //  Iterates through the library's available books
         for (Book book : library.getAvailableBooks()) {
+            //  Performs case-insensitive title comparison
             if (book.getTitle().equalsIgnoreCase(title)) {
-                return book;
+                return book; // Book found, return it
             }
         }
-        return null;
+        return null; // Book not found in available books list
     }
 }
