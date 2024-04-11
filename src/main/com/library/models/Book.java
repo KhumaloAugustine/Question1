@@ -14,12 +14,11 @@ public class Book {
     //  Flag to indicate if the book is available for borrowing (true) or borrowed (false)
     private boolean available;
 
-    //  Constructor to create a new Book object
-    public Book(String title, String author, String isbn) {
+    //  Private constructor to prevent direct object creation (use builder instead)
+    private Book(String title, String author, String isbn) {
         this.title = title;
         this.author = author;
         this.isbn = isbn;
-        //  Sets the book to available by default
         this.available = true;
     }
 
@@ -58,5 +57,34 @@ public class Book {
     @Override
     public String toString() {
         return title + " by " + author + " (" + isbn + ")";
+    }
+
+    //  Nested static builder class for creating Book objects
+    public static class Builder {
+
+        private String title;
+        private String author;
+        private String isbn;
+
+        // Consistent naming convention (member variable name matches setter method name)
+        public Builder author(String author) {
+            this.author = author;
+            return this;
+        }
+
+        public Builder title(String title) {
+            this.title = title;
+            return this;
+        }
+
+        public Builder isbn(String isbn) {
+            this.isbn = isbn;
+            return this;
+        }
+
+        public Book build() {
+            // Validate data if needed before creating the Book object
+            return new Book(title, author, isbn);
+        }
     }
 }

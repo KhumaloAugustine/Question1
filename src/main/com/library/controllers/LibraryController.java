@@ -1,6 +1,7 @@
 package main.com.library.controllers;
 
 import main.com.library.models.Book;
+import main.com.library.models.DummyBooks;
 import main.com.library.models.Library;
 import main.com.library.views.LibraryView;
 
@@ -20,6 +21,14 @@ public class LibraryController {
         //  Add libraries (name, address) to the list during initialization
         libraries.add(new Library("Mountain View Library", "1 Main St."));
         libraries.add(new Library("Forest Creek Library", "5 Elm St."));
+
+        // Add dummy books to each library
+        for (Library library : libraries) {
+            for (Book book : DummyBooks.getDummyBooks()) {
+                library.addBook(book);
+            }
+        }
+
         //  Create an initial LibraryView object without a specific library assigned yet
         this.view = new LibraryView(null);
     }
@@ -108,7 +117,8 @@ public class LibraryController {
         view.displayReturnBookMenu();
         String title = view.getBookTitleInput();
         //  Search for the book by title within the library
-        Book book = findBookByTitle(library, title);
+        Book book = findBookByTitle
+                (library, title);
         if (book != null) {
             //  Attempt to return the book using the library object
             library.returnBook(book);
