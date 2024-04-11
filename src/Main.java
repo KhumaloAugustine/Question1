@@ -1,6 +1,4 @@
 import main.com.library.controllers.LibraryController;
-import main.com.library.models.Library;
-import main.com.library.views.LibraryView;
 
 public class Main {
 
