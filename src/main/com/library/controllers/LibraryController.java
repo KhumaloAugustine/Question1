@@ -123,7 +123,6 @@ public class LibraryController {
         if (borrowedBook != null) {
             //  Book found in borrowed list, return it
             library.returnBook(borrowedBook);
-            System.out.println("Successfully returned \"" + borrowedBook.getTitle() + "\" by " + borrowedBook.getAuthor());
         } else {
             System.out.println("Book not found in " + library.getName() + " Library.");
         }
