@@ -3,6 +3,8 @@ package main.com.library.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import static main.com.library.utils.LibraryUtils.findBookByTitle;
+
 public class Library {
 
     //  Stores the library's name
@@ -17,6 +19,9 @@ public class Library {
     //  List to store all the books in the library
     private final List<Book> books;
 
+    //  List to store borrowed books (implementation for returning books)
+    private List<Book> borrowedBooks;
+
     //  Constructor to create a new Library object
     public Library(String name, String address) {
         this.name = name;
@@ -25,6 +30,7 @@ public class Library {
         this.hours = "9AM to 5PM daily";
         //  Initializes the book list as an empty ArrayList
         this.books = new ArrayList<>();
+        this.borrowedBooks = new ArrayList<>();
     }
 
     //  Adds a new book to the library's collection
@@ -49,6 +55,7 @@ public class Library {
     public boolean borrowBook(Book book) {
         if (book.isAvailable()) {
             book.borrow();
+            borrowedBooks.add(book); // Add borrowed book to the list
             System.out.println("Successfully borrowed \"" + book.getTitle() + "\" by " + book.getAuthor());
             return true;
         } else {
@@ -57,10 +64,22 @@ public class Library {
         }
     }
 
-    //  Marks a book as returned (sets it available)
+    //  Marks a book as returned (sets it available and removes from borrowed list)
     public void returnBook(Book book) {
         book.returnBook();
+        borrowedBooks.remove(book); // Remove book from borrowed list
         System.out.println("Successfully returned \"" + book.getTitle() + "\" by " + book.getAuthor());
+    }
+
+    //  Searches for a borrowed book by title (case-insensitive and ISBN match)
+    public Book findBorrowedBook(String title) {
+        for (Book borrowedBook : borrowedBooks) {
+            if (borrowedBook.getTitle().equalsIgnoreCase(title) &&
+                    borrowedBook.getIsbn().equals(findBookByTitle(books, title).getIsbn())) {
+                return borrowedBook;
+            }
+        }
+        return null;
     }
 
     //  Getter method to access the library's name

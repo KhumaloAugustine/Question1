@@ -3,6 +3,7 @@ package main.com.library.controllers;
 import main.com.library.models.Book;
 import main.com.library.models.DummyBooks;
 import main.com.library.models.Library;
+import main.com.library.utils.LibraryUtils;
 import main.com.library.views.LibraryView;
 
 import java.util.ArrayList;
@@ -102,8 +103,9 @@ public class LibraryController {
     private void borrowBook(Library library) {
         view.displayBorrowBookMenu();
         String title = view.getBookTitleInput();
-        //  Search for the book by title within the library
-        Book book = findBookByTitle(library, title);
+
+        //  Search for the book by title using LibraryUtils
+        Book book = LibraryUtils.findBookByTitle(library.getAvailableBooks(), title);
         if (book != null) {
             //  Attempt to borrow the book using the library object
             library.borrowBook(book);
@@ -116,27 +118,14 @@ public class LibraryController {
     private void returnBook(Library library) {
         view.displayReturnBookMenu();
         String title = view.getBookTitleInput();
-        //  Search for the book by title within the library
-        Book book = findBookByTitle
-                (library, title);
-        if (book != null) {
-            //  Attempt to return the book using the library object
-            library.returnBook(book);
+        //  Search for the book by title within the library's borrowed books list
+        Book borrowedBook = library.findBorrowedBook(title);
+        if (borrowedBook != null) {
+            //  Book found in borrowed list, return it
+            library.returnBook(borrowedBook);
+            System.out.println("Successfully returned \"" + borrowedBook.getTitle() + "\" by " + borrowedBook.getAuthor());
         } else {
             System.out.println("Book not found in " + library.getName() + " Library.");
         }
-
-    }
-
-    //  Searches for a book by title within the provided library
-    private Book findBookByTitle(Library library, String title) {
-        //  Iterates through the library's available books
-        for (Book book : library.getAvailableBooks()) {
-            //  Performs case-insensitive title comparison
-            if (book.getTitle().equalsIgnoreCase(title)) {
-                return book; // Book found, return it
-            }
-        }
-        return null; // Book not found in available books list
     }
 }
